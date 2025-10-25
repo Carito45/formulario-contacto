@@ -1,0 +1,4 @@
+node_modules/
+contactos.db
+*.db
+.env
