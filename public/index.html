@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Contacto</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📬 Formulario de Contacto</h1>
+    
+    <!-- Formulario -->
+    <form id="contactForm">
+      <div class="form-group">
+        <label for="nombre">Nombre completo:</label>
+        <input 
+          type="text" 
+          id="nombre" 
+          name="nombre" 
+          required
+          placeholder="Ej: Juan Pérez"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          required
+          placeholder="Ej: juan@ejemplo.com"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="mensaje">Mensaje:</label>
+        <textarea 
+          id="mensaje" 
+          name="mensaje" 
+          rows="5" 
+          required
+          placeholder="Escribe tu mensaje aquí..."
+        ></textarea>
+      </div>
+      
+      <button type="submit" class="btn-submit">Enviar</button>
+    </form>
+    
+    <!-- Mensaje de éxito/error -->
+    <div id="mensaje-resultado" class="mensaje oculto"></div>
+    
+    <!-- Lista de contactos -->
+    <div class="contactos-lista">
+      <h2>📋 Contactos Guardados</h2>
+      <button id="btnCargar" class="btn-secondary">Cargar Contactos</button>
+      <div id="listaContactos"></div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>
