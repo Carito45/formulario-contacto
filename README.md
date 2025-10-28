@@ -63,3 +63,53 @@ http://localhost:3000
 ---
 
 *Este proyecto fue creado como parte de mi camino de aprendizaje en programación. ¡Cualquier feedback es bienvenido!* 😊
+
+---
+
+## 🚧 Actualizaciones del Proyecto
+
+### Nuevas funcionalidades agregadas:
+
+#### ✅ Sistema de Gestión de Afiliados para Internación Domiciliaria
+- Formulario completo con datos personales, médicos y de obra social
+- Carga de archivos adjuntos (PDFs, imágenes, documentos)
+- Gestión CRUD completa (Crear, Leer, Actualizar, Eliminar)
+- Búsqueda avanzada por múltiples campos
+- Estados de internación (activo/egresado)
+
+**Archivos nuevos:**
+- `server-afiliados.js` - Servidor para gestión de afiliados (puerto 3001)
+- `database-afiliados.js` - Base de datos de afiliados
+- `public-afiliados/` - Frontend del módulo de afiliados
+
+#### ✅ Sistema de Contactos (original)
+- `server.js` - Servidor de contactos (puerto 3000)
+- `database.js` - Base de datos de contactos
+- `public/` - Frontend del módulo de contactos
+
+---
+
+## 🚀 Próximos pasos
+
+Este proyecto será refactorizado en una **aplicación profesional unificada** con:
+- Sistema de autenticación y roles
+- Dashboard centralizado
+- Arquitectura modular escalable
+- Gestión de empresas prestadoras
+- Sistema avanzado de documentos
+
+**Repositorio del proyecto profesional:** (próximamente)
+
+---
+
+## 📝 Notas de Desarrollo
+
+Este repositorio representa mi proceso de aprendizaje en desarrollo fullstack.  
+Cada commit muestra la evolución desde conceptos básicos hasta aplicaciones más complejas.
+
+**Stack tecnológico:**
+- Node.js + Express
+- SQLite
+- JavaScript vanilla
+- HTML5 + CSS3
+- Multer (manejo de archivos)

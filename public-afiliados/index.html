@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Afiliados - Internación Domiciliaria</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🏥 Gestión de Afiliados - Internación Domiciliaria</h1>
+    
+    <!-- Formulario de registro -->
+    <form id="afiliadoForm" enctype="multipart/form-data">
+      <h2>📋 Datos del Afiliado</h2>
+      
+      <!-- Datos Personales -->
+      <div class="seccion">
+        <h3>Datos Personales</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nombre_completo">Nombre Completo: <span class="obligatorio">*</span></label>
+            <input type="text" id="nombre_completo" name="nombre_completo" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="dni">DNI: <span class="obligatorio">*</span></label>
+            <input type="text" id="dni" name="dni" required pattern="[0-9]{7,8}" title="Ingrese DNI sin puntos (7-8 dígitos)">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fecha_nacimiento" name="fecha_nacimiento">
+          </div>
+          
+          <div class="form-group">
+            <label for="edad">Edad: <span class="obligatorio">*</span></label>
+            <input type="number" id="edad" name="edad" required min="0" max="120">
+          </div>
+          
+          <div class="form-group">
+            <label for="sexo">Sexo: <span class="obligatorio">*</span></label>
+            <select id="sexo" name="sexo" required>
+              <option value="">Seleccione...</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="Ej: 11-1234-5678">
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="direccion">Dirección Completa: <span class="obligatorio">*</span></label>
+          <input type="text" id="direccion" name="direccion" required placeholder="Calle, número, piso, depto, localidad">
+        </div>
+      </div>
+      
+      <!-- Datos de Obra Social -->
+      <div class="seccion">
+        <h3>Datos de Obra Social</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="numero_afiliado">Número de Afiliado: <span class="obligatorio">*</span></label>
+            <input type="text" id="numero_afiliado" name="numero_afiliado" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="obra_social">Obra Social:</label>
+            <input type="text" id="obra_social" name="obra_social" placeholder="Ej: OSDE, Swiss Medical">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="plan">Plan:</label>
+          <input type="text" id="plan" name="plan" placeholder="Ej: Plan 210, Plan 310">
+        </div>
+      </div>
+      
+      <!-- Datos Médicos -->
+      <div class="seccion">
+        <h3>Datos Médicos e Internación</h3>
+        
+        <div class="form-group">
+          <label for="diagnostico">Diagnóstico:</label>
+          <textarea id="diagnostico" name="diagnostico" rows="3" placeholder="Diagnóstico principal"></textarea>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fecha_ingreso">Fecha de Ingreso: <span class="obligatorio">*</span></label>
+            <input type="date" id="fecha_ingreso" name="fecha_ingreso" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="fecha_egreso">Fecha de Egreso:</label>
+            <input type="date" id="fecha_egreso" name="fecha_egreso">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="medico_tratante">Médico Tratante:</label>
+          <input type="text" id="medico_tratante" name="medico_tratante">
+        </div>
+        
+        <div class="form-group">
+          <label for="observaciones">Observaciones:</label>
+          <textarea id="observaciones" name="observaciones" rows="4" placeholder="Notas adicionales, indicaciones especiales, etc."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="archivo">Archivo Adjunto:</label>
+          <input type="file" id="archivo" name="archivo" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <small class="ayuda">Formatos permitidos: PDF, imágenes, Word (máx. 5MB)</small>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn-submit">💾 Registrar Afiliado</button>
+    </form>
+    
+    <!-- Mensaje de éxito/error -->
+    <div id="mensaje-resultado" class="mensaje oculto"></div>
+    
+    <!-- Lista de afiliados -->
+    <div class="afiliados-lista">
+      <h2>👥 Afiliados Registrados</h2>
+      <button id="btnCargar" class="btn-secondary">Cargar Afiliados</button>
+      
+      <!-- Campo de búsqueda -->
+      <div class="busqueda-container">
+        <input 
+          type="text" 
+          id="campoBusqueda" 
+          placeholder="🔍 Buscar por nombre, DNI, número de afiliado..."
+          class="input-busqueda"
+        >
+        <span id="resultadosBusqueda" class="contador-resultados"></span>
+      </div>
+      
+      <div id="listaAfiliados"></div>
+    </div>
+  </div>
+  
+  <!-- Modal para editar afiliado -->
+  <div id="modalEditar" class="modal oculto">
+    <div class="modal-contenido modal-grande">
+      <div class="modal-header">
+        <h2>✏️ Editar Afiliado</h2>
+        <button class="btn-cerrar" onclick="cerrarModalEditar()">✕</button>
+      </div>
+      
+      <form id="formEditar" enctype="multipart/form-data">
+        <input type="hidden" id="editarId">
+        <input type="hidden" id="editarArchivoActual">
+        
+        <!-- Los mismos campos que el formulario principal pero con IDs diferentes -->
+        <div class="seccion">
+          <h3>Datos Personales</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editarNombreCompleto">Nombre Completo: <span class="obligatorio">*</span></label>
+              <input type="text" id="editarNombreCompleto" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="editarDni">DNI: <span class="obligatorio">*</span></label>
+              <input type="text" id="editarDni" required pattern="[0-9]{7,8}">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editarFechaNacimiento">Fecha de Nacimiento:</label>
+              <input type="date" id="editarFechaNacimiento">
+            </div>
+            
+            <div class="form-group">
+              <label for="editarEdad">Edad: <span class="obligatorio">*</span></label>
+              <input type="number" id="editarEdad" required min="0" max="120">
+            </div>
+            
+            <div class="form-group">
+              <label for="editarSexo">Sexo: <span class="obligatorio">*</span></label>
+              <select id="editarSexo" required>
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editarTelefono">Teléfono:</label>
+              <input type="tel" id="editarTelefono">
+            </div>
+            
+            <div class="form-group">
+              <label for="editarEmail">Email:</label>
+              <input type="email" id="editarEmail">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="editarDireccion">Dirección Completa: <span class="obligatorio">*</span></label>
+            <input type="text" id="editarDireccion" required>
+          </div>
+        </div>
+        
+        <div class="seccion">
+          <h3>Datos de Obra Social</h3>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editarNumeroAfiliado">Número de Afiliado: <span class="obligatorio">*</span></label>
+              <input type="text" id="editarNumeroAfiliado" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="editarObraSocial">Obra Social:</label>
+              <input type="text" id="editarObraSocial">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="editarPlan">Plan:</label>
+            <input type="text" id="editarPlan">
+          </div>
+        </div>
+        
+        <div class="seccion">
+          <h3>Datos Médicos e Internación</h3>
+          
+          <div class="form-group">
+            <label for="editarDiagnostico">Diagnóstico:</label>
+            <textarea id="editarDiagnostico" rows="3"></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editarFechaIngreso">Fecha de Ingreso: <span class="obligatorio">*</span></label>
+              <input type="date" id="editarFechaIngreso" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="editarFechaEgreso">Fecha de Egreso:</label>
+              <input type="date" id="editarFechaEgreso">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="editarMedicoTratante">Médico Tratante:</label>
+            <input type="text" id="editarMedicoTratante">
+          </div>
+          
+          <div class="form-group">
+            <label for="editarObservaciones">Observaciones:</label>
+            <textarea id="editarObservaciones" rows="4"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="editarArchivo">Archivo Adjunto:</label>
+            <div id="archivoActualInfo"></div>
+            <input type="file" id="editarArchivo" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+            <small class="ayuda">Dejar vacío para mantener el archivo actual</small>
+          </div>
+        </div>
+        
+        <div class="modal-botones">
+          <button type="button" class="btn-cancelar" onclick="cerrarModalEditar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-guardar">
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

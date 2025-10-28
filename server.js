@@ -74,6 +74,37 @@ app.delete('/api/contactos/:id', (req, res) => {
   });
 });
 
+// Ruta para actualizar un contacto (PUT)
+app.put('/api/contactos/:id', (req, res) => {
+  const { id } = req.params;
+  const { nombre, email, mensaje } = req.body;
+  
+  // Validación básica
+  if (!nombre || !email || !mensaje) {
+    return res.status(400).json({ 
+      error: 'Todos los campos son obligatorios' 
+    });
+  }
+  
+  const sql = 'UPDATE contactos SET nombre = ?, email = ?, mensaje = ? WHERE id = ?';
+  
+  db.run(sql, [nombre, email, mensaje, id], function(err) {
+    if (err) {
+      console.error('Error al actualizar:', err);
+      return res.status(500).json({ error: 'Error al actualizar el contacto' });
+    }
+    
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Contacto no encontrado' });
+    }
+    
+    res.json({ 
+      message: 'Contacto actualizado exitosamente',
+      id: id
+    });
+  });
+});
+
     //Iniciar servidor
     app.listen(PORT, () => {
         console.log(`Servidor corriendo en http://localhost:${PORT}`);

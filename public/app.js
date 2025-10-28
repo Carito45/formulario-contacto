@@ -4,14 +4,16 @@ const mensajeResultado = document.getElementById('mensaje-resultado');
 const btnCargar = document.getElementById('btnCargar');
 const listaContactos = document.getElementById('listaContactos');
 
+// Variable para guardar todos los contactos
+let todosLosContactos = [];
+
 // URL base de la API
 const API_URL = 'http://localhost:3000/api/contactos';
 
 // Enviar formulario
 form.addEventListener('submit', async (e) => {
-  e.preventDefault(); // Evita que la página se recargue
+  e.preventDefault();
   
-  // Obtener datos del formulario
   const datos = {
     nombre: document.getElementById('nombre').value,
     email: document.getElementById('email').value,
@@ -19,7 +21,6 @@ form.addEventListener('submit', async (e) => {
   };
   
   try {
-    // Enviar datos al servidor
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -31,12 +32,10 @@ form.addEventListener('submit', async (e) => {
     const resultado = await response.json();
     
     if (response.ok) {
-      // Éxito
       mostrarMensaje('✅ ' + resultado.message, 'exito');
-      form.reset(); // Limpiar formulario
-      cargarContactos(); // Actualizar lista
+      form.reset();
+      cargarContactos();
     } else {
-      // Error del servidor
       mostrarMensaje('❌ ' + resultado.error, 'error');
     }
     
@@ -47,37 +46,50 @@ form.addEventListener('submit', async (e) => {
 });
 
 // Cargar lista de contactos
-btnCargar.addEventListener('click', cargarContactos);
-
 async function cargarContactos() {
   try {
     const response = await fetch(API_URL);
     const contactos = await response.json();
     
-    if (contactos.length === 0) {
-      listaContactos.innerHTML = '<p style="text-align: center; color: #999;">No hay contactos aún</p>';
-      return;
-    }
+    todosLosContactos = contactos;
+    mostrarContactos(contactos);
     
-    // Mostrar contactos
-    listaContactos.innerHTML = contactos.map(contacto => `
-  <div class="contacto-card">
-    <div class="contacto-header">
-      <h3>${contacto.nombre}</h3>
-      <button class="btn-eliminar" onclick="eliminarContacto(${contacto.id})">
-        🗑️ Eliminar
-      </button>
-    </div>
-    <p><strong>Email:</strong> ${contacto.email}</p>
-    <p><strong>Mensaje:</strong> ${contacto.mensaje}</p>
-    <p class="contacto-fecha">📅 ${formatearFecha(contacto.fecha)}</p>
-  </div>
-`).join('');
-
   } catch (error) {
     console.error('Error:', error);
     mostrarMensaje('❌ Error al cargar contactos', 'error');
   }
+}
+
+// Función para mostrar contactos
+function mostrarContactos(contactos) {
+  const resultadosDiv = document.getElementById('resultadosBusqueda');
+  
+  if (contactos.length === 0) {
+    listaContactos.innerHTML = '<div class="no-resultados">No se encontraron contactos</div>';
+    resultadosDiv.textContent = '';
+    return;
+  }
+  
+  resultadosDiv.textContent = `Mostrando ${contactos.length} contacto${contactos.length !== 1 ? 's' : ''}`;
+  
+  listaContactos.innerHTML = contactos.map(contacto => `
+    <div class="contacto-card">
+      <div class="contacto-header">
+        <h3>${contacto.nombre}</h3>
+        <div class="contacto-botones">
+          <button class="btn-editar" onclick="abrirModalEditar(${contacto.id}, '${contacto.nombre.replace(/'/g, "\\'")}', '${contacto.email}', '${contacto.mensaje.replace(/'/g, "\\'")}')">
+            ✏️ Editar
+          </button>
+          <button class="btn-eliminar" onclick="eliminarContacto(${contacto.id})">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+      <p><strong>Email:</strong> ${contacto.email}</p>
+      <p><strong>Mensaje:</strong> ${contacto.mensaje}</p>
+      <p class="contacto-fecha">📅 ${formatearFecha(contacto.fecha)}</p>
+    </div>
+  `).join('');
 }
 
 // Mostrar mensaje de éxito/error
@@ -85,7 +97,6 @@ function mostrarMensaje(texto, tipo) {
   mensajeResultado.textContent = texto;
   mensajeResultado.className = `mensaje ${tipo}`;
   
-  // Ocultar después de 5 segundos
   setTimeout(() => {
     mensajeResultado.className = 'mensaje oculto';
   }, 5000);
@@ -103,12 +114,8 @@ function formatearFecha(fechaStr) {
   });
 }
 
-// Cargar contactos al iniciar
-cargarContactos();
-
 // Función para eliminar contacto
 async function eliminarContacto(id) {
-  // Confirmar antes de eliminar
   if (!confirm('¿Estás seguro de que quieres eliminar este contacto?')) {
     return;
   }
@@ -122,7 +129,7 @@ async function eliminarContacto(id) {
     
     if (response.ok) {
       mostrarMensaje('✅ ' + resultado.message, 'exito');
-      cargarContactos(); // Recargar lista
+      cargarContactos();
     } else {
       mostrarMensaje('❌ ' + resultado.error, 'error');
     }
@@ -132,3 +139,94 @@ async function eliminarContacto(id) {
     mostrarMensaje('❌ Error al eliminar el contacto', 'error');
   }
 }
+
+// Abrir modal de edición
+function abrirModalEditar(id, nombre, email, mensaje) {
+  document.getElementById('editarId').value = id;
+  document.getElementById('editarNombre').value = nombre;
+  document.getElementById('editarEmail').value = email;
+  document.getElementById('editarMensaje').value = mensaje;
+  
+  document.getElementById('modalEditar').classList.remove('oculto');
+}
+
+// Cerrar modal de edición
+function cerrarModalEditar() {
+  document.getElementById('modalEditar').classList.add('oculto');
+  document.getElementById('formEditar').reset();
+}
+
+// Cerrar modal al hacer click fuera
+document.getElementById('modalEditar').addEventListener('click', (e) => {
+  if (e.target.id === 'modalEditar') {
+    cerrarModalEditar();
+  }
+});
+
+// Manejar envío del formulario de edición
+document.getElementById('formEditar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const id = document.getElementById('editarId').value;
+  const datos = {
+    nombre: document.getElementById('editarNombre').value,
+    email: document.getElementById('editarEmail').value,
+    mensaje: document.getElementById('editarMensaje').value
+  };
+  
+  try {
+    const response = await fetch(`${API_URL}/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(datos)
+    });
+    
+    const resultado = await response.json();
+    
+    if (response.ok) {
+      mostrarMensaje('✅ ' + resultado.message, 'exito');
+      cerrarModalEditar();
+      cargarContactos();
+    } else {
+      mostrarMensaje('❌ ' + resultado.error, 'error');
+    }
+    
+  } catch (error) {
+    console.error('Error:', error);
+    mostrarMensaje('❌ Error al actualizar el contacto', 'error');
+  }
+});
+
+// Función de búsqueda
+function buscarContactos(termino) {
+  const terminoLower = termino.toLowerCase().trim();
+  
+  if (terminoLower === '') {
+    mostrarContactos(todosLosContactos);
+    return;
+  }
+  
+  const contactosFiltrados = todosLosContactos.filter(contacto => {
+    return contacto.nombre.toLowerCase().includes(terminoLower) ||
+           contacto.email.toLowerCase().includes(terminoLower) ||
+           contacto.mensaje.toLowerCase().includes(terminoLower);
+  });
+  
+  mostrarContactos(contactosFiltrados);
+}
+
+// Escuchar eventos de búsqueda
+document.getElementById('campoBusqueda').addEventListener('input', (e) => {
+  buscarContactos(e.target.value);
+});
+
+// Limpiar búsqueda al cargar contactos nuevos
+btnCargar.addEventListener('click', () => {
+  document.getElementById('campoBusqueda').value = '';
+  cargarContactos();
+});
+
+// Cargar contactos al iniciar
+cargarContactos();

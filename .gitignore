@@ -2,3 +2,5 @@ node_modules/
 contactos.db
 *.db
 .env
+uploads/
+afiliados.db

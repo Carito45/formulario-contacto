@@ -55,7 +55,56 @@
     <div class="contactos-lista">
       <h2>📋 Contactos Guardados</h2>
       <button id="btnCargar" class="btn-secondary">Cargar Contactos</button>
+      <!-- Campo de búsqueda -->
+  <div class="busqueda-container">
+    <input 
+      type="text" 
+      id="campoBusqueda" 
+      placeholder="🔍 Buscar por nombre o email..."
+      class="input-busqueda"
+    >
+    <span id="resultadosBusqueda" class="contador-resultados"></span>
+  </div>
+      
       <div id="listaContactos"></div>
+    </div>
+  </div>
+
+  <!-- Modal para editar contacto -->
+  <div id="modalEditar" class="modal oculto">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h2>✏️ Editar Contacto</h2>
+        <button class="btn-cerrar" onclick="cerrarModalEditar()">✕</button>
+      </div>
+      
+      <form id="formEditar">
+        <input type="hidden" id="editarId">
+        
+        <div class="form-group">
+          <label for="editarNombre">Nombre completo:</label>
+          <input type="text" id="editarNombre" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editarEmail">Email:</label>
+          <input type="email" id="editarEmail" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="editarMensaje">Mensaje:</label>
+          <textarea id="editarMensaje" rows="5" required></textarea>
+        </div>
+        
+        <div class="modal-botones">
+          <button type="button" class="btn-cancelar" onclick="cerrarModalEditar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-guardar">
+            Guardar Cambios
+          </button>
+        </div>
+      </form>
     </div>
   </div>
   
